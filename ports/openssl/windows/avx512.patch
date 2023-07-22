@@ -3,7 +3,7 @@ index fa9bfb7a7b..243be84e86 100755
 --- a/crypto/poly1305/asm/poly1305-x86_64.pl
 +++ b/crypto/poly1305/asm/poly1305-x86_64.pl
 @@ -2814,7 +2814,6 @@ poly1305_blocks_vpmadd52:
- 
+
  	shl	\$40,$padbit
  	mov	64($ctx),%r8			# peek on power of the key
 -
@@ -11,28 +11,28 @@ index fa9bfb7a7b..243be84e86 100755
  	# blocks with this single-block subroutine, otherwise ensure that
  	# length is divisible by 2 blocks and pass the rest down to next
 @@ -3383,7 +3382,21 @@ poly1305_blocks_vpmadd52_8x:
- 
+
  	shl	\$40,$padbit
  	mov	64($ctx),%r8			# peek on power of the key
 -
 +___
 +$code.=<<___	if ($win64);
 +	sub		\$0xf0,%rsp
-+	vmovdqa		%xmm6,0x50(%r11)
-+	vmovdqa		%xmm7,0x60(%r11)
-+	vmovdqa		%xmm8,0x70(%r11)
-+	vmovdqa		%xmm9,0x80(%r11)
-+	vmovdqa		%xmm10,0x90(%r11)
-+	vmovdqa		%xmm11,0xa0(%r11)
-+	vmovdqa		%xmm12,0xb0(%r11)
-+	vmovdqa		%xmm13,0xc0(%r11)
-+	vmovdqa		%xmm14,0xd0(%r11)
-+	vmovdqa		%xmm15,0xe0(%r11)
++	vmovdqa		%xmm6,0x50(%rsp)
++	vmovdqa		%xmm7,0x60(%rsp)
++	vmovdqa		%xmm8,0x70(%rsp)
++	vmovdqa		%xmm9,0x80(%rsp)
++	vmovdqa		%xmm10,0x90(%rsp)
++	vmovdqa		%xmm11,0xa0(%rsp)
++	vmovdqa		%xmm12,0xb0(%rsp)
++	vmovdqa		%xmm13,0xc0(%rsp)
++	vmovdqa		%xmm14,0xd0(%rsp)
++	vmovdqa		%xmm15,0xe0(%rsp)
 +___
 +$code.=<<___;
  	vmovdqa64	.Lx_mask44(%rip),$mask44
  	vmovdqa64	.Lx_mask42(%rip),$mask42
- 
+
 @@ -3730,7 +3743,21 @@ $code.=<<___;
  	vmovq		%x#$H1,8($ctx)
  	vmovq		%x#$H2,16($ctx)
@@ -40,16 +40,16 @@ index fa9bfb7a7b..243be84e86 100755
 -
 +___
 +$code.=<<___	if ($win64);
-+	vmovdqa		0x50(%r11),%xmm6
-+	vmovdqa		0x60(%r11),%xmm7
-+	vmovdqa		0x70(%r11),%xmm8
-+	vmovdqa		0x80(%r11),%xmm9
-+	vmovdqa		0x90(%r11),%xmm10
-+	vmovdqa		0xa0(%r11),%xmm11
-+	vmovdqa		0xb0(%r11),%xmm12
-+	vmovdqa		0xc0(%r11),%xmm13
-+	vmovdqa		0xd0(%r11),%xmm14
-+	vmovdqa		0xe0(%r11),%xmm15
++	vmovdqa		0x50(%rsp),%xmm6
++	vmovdqa		0x60(%rsp),%xmm7
++	vmovdqa		0x70(%rsp),%xmm8
++	vmovdqa		0x80(%rsp),%xmm9
++	vmovdqa		0x90(%rsp),%xmm10
++	vmovdqa		0xa0(%rsp),%xmm11
++	vmovdqa		0xb0(%rsp),%xmm12
++	vmovdqa		0xc0(%rsp),%xmm13
++	vmovdqa		0xd0(%rsp),%xmm14
++	vmovdqa		0xe0(%rsp),%xmm15
 +	add		\$0xf0,%rsp
 +___
 +$code.=<<___;
