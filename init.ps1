@@ -6,8 +6,15 @@ $ErrorActionPreference = "Stop"
 
 # Check if Git is installed
 if (-not (Get-Command git -ErrorAction SilentlyContinue)) {
-	Write-Error "Error: Git is not installed."
-	Write-Error "Please download and install Git from: https://gitforwindows.org/"
+	Write-Host "Error: Git is not installed."
+	Write-Host "Please download and install Git from: https://gitforwindows.org/"
+	exit 1
+}
+
+# Check if Python 3 is installed and available on the PATH
+if (-not (Get-Command python -ErrorAction SilentlyContinue)) {
+	Write-Host "Error: Python 3 is not installed."
+	Write-Host "Please download and install Python 3 from: https://www.python.org/downloads/"
 	exit 1
 }
 
@@ -61,6 +68,31 @@ if (-not (Test-Path $cmakeExe))
 else
 {
 	Write-Host "Skipping CMake download since the folder already exists."
+}
+
+# Set up nasm
+$nasmDirectory = Join-Path -Path $scriptDirectory -ChildPath "_nasm"
+$nasmZipFolder = "nasm-2.16.01"
+$nasmZipFile = Join-Path -Path $nasmDirectory -ChildPath "nasm.zip"
+$nasmUrl = "https://www.nasm.us/pub/nasm/releasebuilds/2.16.01/win64/$nasmZipFolder-win64.zip"
+$nasmExe = Join-Path -Path $nasmDirectory -ChildPath "nasm.exe"
+
+# Download nasm if it doesn't exist
+if (-not (Test-Path $nasmExe))
+{
+	Write-Host "Downloading nasm..."
+	New-Item -ItemType Directory -Path $nasmDirectory | Out-Null
+	Invoke-WebRequest -Uri $nasmUrl -OutFile $nasmZipFile
+
+	Write-Host "Extracting nasm..."
+	Expand-Archive -Path $nasmZipFile -DestinationPath $nasmDirectory
+
+	# Rename the folder so that the version number is removed
+	Rename-Item -Path "$nasmDirectory/$nasmZipFolder" -NewName "nasm"
+}
+else
+{
+	Write-Host "Skipping nasm download since the folder already exists."
 }
 
 Write-Host "Successfully finished initializing the repository."

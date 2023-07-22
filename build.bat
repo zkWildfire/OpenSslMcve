@@ -43,9 +43,10 @@ if ERRORLEVEL 1 (
 REM Handle cleanup
 :L_END
 popd
+
+REM No need to print anything if the build failed since CMake will print an
+REM   error message.
 if "%RESULT%"=="0" (
 	echo Build succeeded.
-) else (
-	echo Build failed.
 )
 exit /b %RESULT%

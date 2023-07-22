@@ -9,7 +9,13 @@
 		{
 			"name": "base",
 			"hidden": true,
-			"toolchainFile": "${sourceDir}/_vcpkg/scripts/buildsystems/vcpkg.cmake"
+			"toolchainFile": "${sourceDir}/_vcpkg/scripts/buildsystems/vcpkg.cmake",
+			"cacheVariables": {
+				"CMAKE_ASM_NASM_COMPILER": {
+					"type": "string",
+					"value": "${sourceDir}/_nasm/nasm/nasm.exe"
+				}
+			}
 		},
 		{
 			"name": "debug",
