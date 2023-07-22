@@ -1,5 +1,5 @@
 diff --git a/crypto/poly1305/asm/poly1305-x86_64.pl b/crypto/poly1305/asm/poly1305-x86_64.pl
-index fa9bfb7a7b..3824ab73c5 100755
+index fa9bfb7a7b..51c1745da6 100755
 --- a/crypto/poly1305/asm/poly1305-x86_64.pl
 +++ b/crypto/poly1305/asm/poly1305-x86_64.pl
 @@ -2814,7 +2814,6 @@ poly1305_blocks_vpmadd52:
@@ -10,11 +10,18 @@ index fa9bfb7a7b..3824ab73c5 100755
  	# if powers of the key are not calculated yet, process up to 3
  	# blocks with this single-block subroutine, otherwise ensure that
  	# length is divisible by 2 blocks and pass the rest down to next
-@@ -3383,7 +3382,21 @@ poly1305_blocks_vpmadd52_8x:
+@@ -3383,7 +3382,6 @@ poly1305_blocks_vpmadd52_8x:
  
  	shl	\$40,$padbit
  	mov	64($ctx),%r8			# peek on power of the key
 -
+ 	vmovdqa64	.Lx_mask44(%rip),$mask44
+ 	vmovdqa64	.Lx_mask42(%rip),$mask42
+ 
+@@ -3395,6 +3393,21 @@ poly1305_blocks_vpmadd52_8x:
+ 	vmovq	16($ctx),%x#$H2
+ 
+ .Lblocks_vpmadd52_8x:
 +___
 +$code.=<<___	if ($win64);
 +	sub		\$0xf0,%rsp
@@ -30,8 +37,8 @@ index fa9bfb7a7b..3824ab73c5 100755
 +	vmovdqa		%xmm15,0xe0(%rsp)
 +___
 +$code.=<<___;
- 	vmovdqa64	.Lx_mask44(%rip),$mask44
- 	vmovdqa64	.Lx_mask42(%rip),$mask42
+ 	################################################################
+ 	# fist we calculate more key powers
  
 @@ -3730,7 +3743,21 @@ $code.=<<___;
  	vmovq		%x#$H1,8($ctx)
