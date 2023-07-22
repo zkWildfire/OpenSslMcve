@@ -21,7 +21,7 @@ $vcpkgDirectory = Join-Path -Path $scriptDirectory -ChildPath "_vcpkg"
 if (-not (Test-Path $vcpkgDirectory))
 {
 	Write-Host "Cloning vcpkg into '$vcpkgDirectory'..."
-	git clone git@github.com:microsoft/vcpkg.git $vcpkgDirectory
+	git clone https://github.com/microsoft/vcpkg.git $vcpkgDirectory
 }
 else
 {
