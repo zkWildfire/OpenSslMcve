@@ -52,3 +52,8 @@ quote_type = double
 
 [*.html]
 indent_size = 2
+
+
+[*.patch]
+# Trailing whitespace is significant in git patches
+trim_trailing_whitespace = false
