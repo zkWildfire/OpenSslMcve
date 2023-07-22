@@ -1,5 +1,5 @@
 diff --git a/crypto/poly1305/asm/poly1305-x86_64.pl b/crypto/poly1305/asm/poly1305-x86_64.pl
-index fa9bfb7a7b..51c1745da6 100755
+index fa9bfb7a7b..e2b6609838 100755
 --- a/crypto/poly1305/asm/poly1305-x86_64.pl
 +++ b/crypto/poly1305/asm/poly1305-x86_64.pl
 @@ -2814,7 +2814,6 @@ poly1305_blocks_vpmadd52:
@@ -24,7 +24,7 @@ index fa9bfb7a7b..51c1745da6 100755
  .Lblocks_vpmadd52_8x:
 +___
 +$code.=<<___	if ($win64);
-+	sub		\$0xf0,%rsp
++	sub		\$0xf8,%rsp
 +	vmovdqa		%xmm6,0x50(%rsp)
 +	vmovdqa		%xmm7,0x60(%rsp)
 +	vmovdqa		%xmm8,0x70(%rsp)
@@ -57,7 +57,7 @@ index fa9bfb7a7b..51c1745da6 100755
 +	vmovdqa		0xc0(%rsp),%xmm13
 +	vmovdqa		0xd0(%rsp),%xmm14
 +	vmovdqa		0xe0(%rsp),%xmm15
-+	add		\$0xf0,%rsp
++	add		\$0xf8,%rsp
 +___
 +$code.=<<___;
  .Lno_data_vpmadd52_8x:
