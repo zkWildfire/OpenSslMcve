@@ -18,15 +18,15 @@ global setXmmRegister{0}
 ; @param values The array to store the values in. Must contain at least 4
 ;   elements.
 getXmmRegister{0}:
-	movaps [rcx], xmm{0}
+	movups [rcx], xmm{0}
 	ret
 
-; void setXmmRegister{0}(float* values);
+; void setXmmRegister{0}(const float* values);
 ; Sets the values of the XMM register to the values in the array.
 ; @param values The array containing the values to set. Must contain at least
 ;   4 elements.
 setXmmRegister{0}:
-	movaps xmm{0}, [rcx]
+	movups xmm{0}, [rcx]
 	ret
 """
 

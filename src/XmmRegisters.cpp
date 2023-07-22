@@ -99,6 +99,21 @@ XmmRegisters::XmmRegisters()
 	}
 }
 
+XmmRegisters::XmmRegisters(bool)
+	: XmmRegisters()
+{
+	// Set each register to a constant value
+	for (int32_t i = 0; i < XMM_REGISTER_COUNT; ++i)
+	{
+		float values[FLOATS_PER_XMM_REGISTER];
+		for (int32_t j = 0; j < FLOATS_PER_XMM_REGISTER; ++j)
+		{
+			values[j] = static_cast<float>(i * FLOATS_PER_XMM_REGISTER + j);
+		}
+		WriteRegister(i, values);
+	}
+}
+
 XmmRegisters::~XmmRegisters()
 {
 	// Restore the state of all registers

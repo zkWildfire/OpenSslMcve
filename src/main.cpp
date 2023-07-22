@@ -5,8 +5,9 @@ int main()
 {
 	std::cout << "Hello, World!\n";
 	{
-		XmmRegisters registers;
+		XmmRegisters registers(true);
 		registers.PrintSavedRegisters();
+		XmmRegisters::PrintAllRegisters();
 	}
 	return 0;
 }

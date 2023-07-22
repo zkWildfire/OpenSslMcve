@@ -16,7 +16,19 @@ public:
 	static constexpr int32_t FLOATS_PER_XMM_REGISTER = 4;
 
 	/// Captures a snapshot of the XMM registers.
+	/// @param populate If true, the XMM registers will be populated with
+	///   non-zero values after being captured. This allows the registers'
+	///   values to be inspected later to ensure that they were restored
+	///   correctly.
 	XmmRegisters();
+
+	/// Captures a snapshot of the XMM registers, then sets them to constants.
+	/// This constructor is used to force non-zero values to be present in the
+	///   various XMM registers. This allows the registers' values to be
+	///   inspected later to ensure that they have been restored correctly by
+	///   any called method.
+	/// @param populate Dummy parameter used to select this constructor overload.
+	XmmRegisters(bool populate);
 	XmmRegisters(const XmmRegisters&) = delete;
 	XmmRegisters(XmmRegisters&&) = delete;
 	XmmRegisters& operator=(const XmmRegisters&) = delete;
