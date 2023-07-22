@@ -41,7 +41,7 @@ bug:
     * See `x86_64cpuid.asm:186` (created during the build process of OpenSSL)
       for where AVX-512 support is suppressed on Skylake-derived architectures
     * Also see `crypto/poly1305/asm/poly1305-x86_64.pl` in the OpenSSL source
-      code for further details on how the AVX-512 code path is not used on
+      code for further details on why the AVX-512 code path is not used on
       Skylake X-derived architectures
 * The host OS must be Windows
     * This bug occurs as a result of failing to follow the x64 calling
