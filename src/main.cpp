@@ -33,7 +33,7 @@ void PrintResults(
 		std::cout << std::hex << static_cast<int>(byte);
 	}
 	std::cout << "\n";
-	std::cout << "Decrypted plaintext: " << decryptedPlaintext << "\n";
+	std::cout << "Decrypted plaintext: " << decryptedPlaintext << "\n\n";
 }
 
 /// Tests the Poly1305 class with a short string.
