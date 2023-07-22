@@ -14,6 +14,10 @@
 				"CMAKE_ASM_NASM_COMPILER": {
 					"type": "string",
 					"value": "${sourceDir}/_nasm/nasm/nasm.exe"
+				},
+				"CMAKE_EXPORT_COMPILE_COMMANDS": {
+					"type": "bool",
+					"value": true
 				}
 			}
 		},

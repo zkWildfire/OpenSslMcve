@@ -1,0 +1,126 @@
+{
+	// See https://go.microsoft.com/fwlink/?LinkId=733558
+	// for the documentation about the tasks.json format
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"type": "shell",
+			"label": "Build (debug)",
+			"command": "build.bat",
+			"args": [
+				"debug"
+			],
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			},
+			"problemMatcher": [
+				"$msCompile"
+			],
+			// Needed if the default terminal on Windows is a WSL terminal
+			"options": {
+				"shell": {
+					"executable": "cmd.exe",
+					"args": [
+						"/c"
+					]
+				}
+			}
+		},
+		{
+			"type": "shell",
+			"label": "Build (release)",
+			"command": "build.bat",
+			"args": [
+				"release"
+			],
+			"group": "build",
+			"problemMatcher": [
+				"$msCompile"
+			],
+			// Needed if the default terminal on Windows is a WSL terminal
+			"options": {
+				"shell": {
+					"executable": "cmd.exe",
+					"args": [
+						"/c"
+					]
+				}
+			}
+		},
+		{
+			"type": "shell",
+			"label": "Clean",
+			"command": "rmdir",
+			"args": [
+				"/s",
+				"/q",
+				"_build",
+				"_out",
+				// Ignore errors
+				"||",
+				"exit",
+				"0"
+			],
+			"group": "build",
+			"problemMatcher": [],
+			// Needed if the default terminal on Windows is a WSL terminal
+			"options": {
+				"shell": {
+					"executable": "cmd.exe",
+					"args": [
+						"/c"
+					]
+				}
+			}
+		},
+		{
+			"type": "shell",
+			"label": "Clean build (debug)",
+			"command": "build.bat",
+			"args": [
+				"debug"
+			],
+			"group": "build",
+			"problemMatcher": [
+				"$msCompile"
+			],
+			"dependsOn": [
+				"Clean"
+			],
+			// Needed if the default terminal on Windows is a WSL terminal
+			"options": {
+				"shell": {
+					"executable": "cmd.exe",
+					"args": [
+						"/c"
+					]
+				}
+			}
+		},
+		{
+			"type": "shell",
+			"label": "Clean build (release)",
+			"command": "build.bat",
+			"args": [
+				"release"
+			],
+			"group": "build",
+			"problemMatcher": [
+				"$msCompile"
+			],
+			"dependsOn": [
+				"Clean"
+			],
+			// Needed if the default terminal on Windows is a WSL terminal
+			"options": {
+				"shell": {
+					"executable": "cmd.exe",
+					"args": [
+						"/c"
+					]
+				}
+			}
+		},
+	]
+}

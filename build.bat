@@ -18,7 +18,7 @@ if "%BUILD_TYPE%" == "" (
 )
 
 REM Add CMake to the path
-set PATH=%REPO_ROOT%\_cmake\cmake\bin;%PATH%
+set PATH=%REPO_ROOT%\_cmake\cmake\bin;%REPO_ROOT%\_ninja;%PATH%
 
 REM Run the build
 pushd %REPO_ROOT%

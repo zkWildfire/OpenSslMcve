@@ -75,7 +75,7 @@ $nasmDirectory = Join-Path -Path $scriptDirectory -ChildPath "_nasm"
 $nasmZipFolder = "nasm-2.16.01"
 $nasmZipFile = Join-Path -Path $nasmDirectory -ChildPath "nasm.zip"
 $nasmUrl = "https://www.nasm.us/pub/nasm/releasebuilds/2.16.01/win64/$nasmZipFolder-win64.zip"
-$nasmExe = Join-Path -Path $nasmDirectory -ChildPath "nasm.exe"
+$nasmExe = Join-Path -Path $nasmDirectory -ChildPath "nasm/nasm.exe"
 
 # Download nasm if it doesn't exist
 if (-not (Test-Path $nasmExe))
@@ -93,6 +93,26 @@ if (-not (Test-Path $nasmExe))
 else
 {
 	Write-Host "Skipping nasm download since the folder already exists."
+}
+
+# Download ninja if it doesn't exist
+$ninjaDirectory = Join-Path -Path $scriptDirectory -ChildPath "_ninja"
+$ninjaUrl = "https://github.com/ninja-build/ninja/releases/download/v1.11.1/ninja-win.zip"
+$ninjaZip = Join-Path -Path $ninjaDirectory -ChildPath "ninja.zip"
+$ninjaExe = Join-Path -Path $ninjaDirectory -ChildPath "ninja.exe"
+
+if (-not (Test-Path $ninjaExe))
+{
+	Write-Host "Downloading ninja..."
+	New-Item -ItemType Directory -Path $ninjaDirectory | Out-Null
+	Invoke-WebRequest -Uri $ninjaUrl -OutFile $ninjaZip
+
+	Write-Host "Extracting ninja..."
+	Expand-Archive -Path $ninjaZip -DestinationPath $ninjaDirectory
+}
+else
+{
+	Write-Host "Skipping ninja download since the folder already exists."
 }
 
 Write-Host "Successfully finished initializing the repository."
