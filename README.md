@@ -202,8 +202,8 @@ which are affected by this bug.
 * Code blocks for restoring the XMM registers are present at:
     * `$L$short_tail_avx` (`poly1305-x86_64.asm:1276`)
     * `$L$tail_avx2` (`poly1305-x86_64.asm:2016`)
-* Code flow in `poly1305_blocks()`:
-    * `poly1305_blocks_vpmadd52` (`poly1305-x86_64.asm:2660`)
+* Code flow when `poly1305_blocks()` is called:
+    * Starts at `poly1305_blocks_vpmadd52` (`poly1305-x86_64.asm:2660`)
     * `$L$blocks_vpmadd52_4x` (`poly1305-x86_64.asm:2803`)
         * Jumped to from `poly1305-x86_64.asm:2692`
     * `$L$init_vpmadd52` (`poly1305-x86_64.asm:2859`)
@@ -236,3 +236,6 @@ which are affected by this bug.
 * `poly1305_init()` does not save XMM registers to memory
     * Therefore, it is likely that XMM save and restore code needs to be added
       to the code executed by `poly1305_blocks()`
+* Possible fix:
+    * Add XMM save code to `poly1305_blocks_vpmadd52` (`poly1305-x86_64.asm:2660`)
+    * Add XMM restore code to `$L$no_data_vpmadd52_8x` (`poly1305-x86_64.asm:3577`)
