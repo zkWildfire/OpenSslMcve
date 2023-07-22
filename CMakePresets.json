@@ -7,9 +7,17 @@
 	},
 	"configurePresets": [
 		{
+			"name": "base",
+			"hidden": true,
+			"toolchainFile": "${sourceDir}/_vcpkg/scripts/buildsystems/vcpkg.cmake"
+		},
+		{
 			"name": "debug",
 			"displayName": "Debug",
 			"description": "Builds the MCVE in Debug mode",
+			"inherits": [
+				"base"
+			],
 			"binaryDir": "${sourceDir}/_build/debug",
 			"installDir": "${sourceDir}/_out/debug",
 			"cacheVariables": {
@@ -23,6 +31,9 @@
 			"name": "release",
 			"displayName": "Release",
 			"description": "Builds the MCVE in Release mode",
+			"inherits": [
+				"base"
+			],
 			"binaryDir": "${sourceDir}/_build/release",
 			"installDir": "${sourceDir}/_out/release",
 			"cacheVariables": {
