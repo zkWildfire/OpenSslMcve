@@ -64,7 +64,7 @@ extern "C" {
 """
 for i in range(XMM_REGISTER_COUNT):
 	header_file_contents += f"\tvoid getXmmRegister{i}(float* values);\n"
-	header_file_contents += f"\tvoid setXmmRegister{i}(float* values);\n"
+	header_file_contents += f"\tvoid setXmmRegister{i}(const float* values);\n\n"
 
 header_file_contents += "}\n"
 

@@ -57,6 +57,7 @@
 				"/q",
 				"_build",
 				"_out",
+				"out",
 				// Ignore errors
 				"||",
 				"exit",

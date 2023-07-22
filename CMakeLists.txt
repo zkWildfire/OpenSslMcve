@@ -39,7 +39,11 @@ target_include_directories(GENERATED_ASM
 )
 
 # Set up the MCVE executable
-add_executable(MCVE source.cpp)
+add_executable(MCVE
+	src/main.cpp
+	src/XmmRegisters.hpp
+	src/XmmRegisters.cpp
+)
 target_link_libraries(MCVE
 	PRIVATE
 		GENERATED_ASM
