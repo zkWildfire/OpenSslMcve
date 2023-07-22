@@ -50,4 +50,9 @@ target_link_libraries(MCVE
 		OpenSSL::SSL
 		OpenSSL::Crypto
 )
-install(TARGETS MCVE)
+install(
+	TARGETS
+		MCVE
+	DESTINATION
+		"${CMAKE_INSTALL_PREFIX}"
+)
