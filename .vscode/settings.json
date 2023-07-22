@@ -2,5 +2,6 @@
 	"C_Cpp.default.includePath": [
 		"_build/debug/asm",
 		"_build/release/asm"
-	]
+	],
+	"C_Cpp.default.configurationProvider": "ms-vscode.cmake-tools"
 }

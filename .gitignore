@@ -500,6 +500,8 @@ _vcpkg/
 _build/
 _out/
 
-# This is used by Visual Studio by default regardless of what the install
-#   prefix in the presets.json file is
+# The first time Visual Studio processes the folder, it may generate files into
+#   `out` instead of the install prefix specified in the presets folder (or,
+#   this may have been because the presets file was set to version 6 the first
+#   time the folder was opened and the version of VS in use didn't support v6).
 out/
