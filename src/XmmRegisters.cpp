@@ -102,15 +102,23 @@ XmmRegisters::XmmRegisters()
 XmmRegisters::XmmRegisters(bool)
 	: XmmRegisters()
 {
-	// Set each register to a constant value
+	// Calculate all values to write to the registers before writing to any
+	//   register. This is done to (hopefully) avoid executing any
+	//   compiler-generated instructions that use the XMM registers between
+	//   calls to the setter method that was declared in the .asm file.
+	float values[XMM_REGISTER_COUNT][FLOATS_PER_XMM_REGISTER];
 	for (int32_t i = 0; i < XMM_REGISTER_COUNT; ++i)
 	{
-		float values[FLOATS_PER_XMM_REGISTER];
 		for (int32_t j = 0; j < FLOATS_PER_XMM_REGISTER; ++j)
 		{
-			values[j] = static_cast<float>(i * FLOATS_PER_XMM_REGISTER + j);
+			values[i][j] = static_cast<float>(i * FLOATS_PER_XMM_REGISTER + j);
 		}
-		WriteRegister(i, values);
+	}
+
+	// Set each register to the calculated values
+	for (int32_t i = 0; i < XMM_REGISTER_COUNT; ++i)
+	{
+		WriteRegister(i, values[i]);
 	}
 }
 
@@ -125,8 +133,10 @@ XmmRegisters::~XmmRegisters()
 
 void XmmRegisters::PrintSavedRegisters() const
 {
+	std::cout << "Saved registers:\n";
 	for (int32_t i = 0; i < XMM_REGISTER_COUNT; ++i)
 	{
 		PrintRegister(i, m_state[i]);
 	}
+	std::cout << "\n";
 }
