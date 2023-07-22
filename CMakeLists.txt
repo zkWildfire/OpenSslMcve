@@ -42,6 +42,7 @@ target_include_directories(GENERATED_ASM
 add_executable(MCVE
 	src/main.cpp
 	src/Poly1305.hpp
+	src/Poly1305.cpp
 	src/XmmRegisters.hpp
 	src/XmmRegisters.cpp
 )
