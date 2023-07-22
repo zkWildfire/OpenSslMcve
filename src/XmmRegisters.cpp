@@ -1,6 +1,7 @@
 #include "XmmRegisters.hpp"
 #include "xmm.hpp"
 #include <iostream>
+#include <ios>
 
 namespace
 {
@@ -74,7 +75,7 @@ void XmmRegisters::PrintRegister(int32_t registerIndex)
 
 void XmmRegisters::PrintRegister(int32_t registerIndex, const float* values)
 {
-	std::cout << "XMM" << registerIndex << ": ";
+	std::cout << "XMM" << std::dec << registerIndex << ": ";
 	for (int32_t i = 0; i < FLOATS_PER_XMM_REGISTER; ++i)
 	{
 		std::cout << values[i] << " ";
