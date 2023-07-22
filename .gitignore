@@ -490,7 +490,8 @@ FodyWeavers.xsd
 
 # End of https://www.toptal.com/developers/gitignore/api/windows,visualstudiocode,visualstudio,vim,c++
 
-# Ignore the directory that vcpkg is cloned into
+# Ignore the directory that prerequisites are installed to
+_cmake/
 _vcpkg/
 
 # Ignore build directories
