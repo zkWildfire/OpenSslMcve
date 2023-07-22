@@ -21,10 +21,10 @@ to have been restored correctly.
 ## Setup
 This bug only occurs on Windows. To run the MCVE, you will need to have Visual
 Studio installed and locatable by vswhere.exe, or you will need to have the
-Visual Studio build tools installed and run commands in a terminal in which
-the `vsdevcmd.bat` script has been run. To handle first time setup, run the
+Visual Studio build tools installed. To handle first time setup, run the
 `init.ps1` script (which may require you to configure your powershell execution
-policy). Once the script has completed, run `build.bat` to build the project.
+policy). Once the script has completed, run `build.bat` in a Visual Studio
+Developer Command Prompt to build the project.
 
 This bug requires the following conditions to be met in order to reproduce the
 bug:
