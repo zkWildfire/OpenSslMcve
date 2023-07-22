@@ -1,0 +1,46 @@
+{
+	"version": 6,
+	"cmakeMinimumRequired": {
+		"major": 3,
+		"minor": 23,
+		"patch": 0
+	},
+	"configurePresets": [
+		{
+			"name": "debug",
+			"displayName": "Debug",
+			"description": "Builds the MCVE in Debug mode",
+			"binaryDir": "${sourceDir}/_build/debug",
+			"installDir": "${sourceDir}/_out/debug",
+			"cacheVariables": {
+				"CMAKE_BUILD_TYPE": {
+					"type": "string",
+					"value": "Debug"
+				}
+			}
+		},
+		{
+			"name": "release",
+			"displayName": "Release",
+			"description": "Builds the MCVE in Release mode",
+			"binaryDir": "${sourceDir}/_build/release",
+			"installDir": "${sourceDir}/_out/release",
+			"cacheVariables": {
+				"CMAKE_BUILD_TYPE": {
+					"type": "string",
+					"value": "Release"
+				}
+			}
+		}
+	],
+	"buildPresets": [
+		{
+			"name": "debug",
+			"configurePreset": "debug"
+		},
+		{
+			"name": "release",
+			"configurePreset": "release"
+		}
+	]
+}

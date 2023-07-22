@@ -56,7 +56,7 @@ if (-not (Test-Path $cmakeExe))
 	Expand-Archive -Path $cmakeZip -DestinationPath $cmakeDirectory
 
 	# Rename the folder so that the version number is removed
-	Rename-Item -Path $cmakeFolder -NewName "cmake"
+	Rename-Item -Path "$cmakeDirectory/$cmakeZipFolder" -NewName "cmake"
 }
 else
 {
