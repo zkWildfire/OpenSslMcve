@@ -193,11 +193,11 @@ necessary to make use of the `r11` register.
 To apply this fix, open `vcpkg-configuration.json` and set vcpkg to use the
 `ports/fixed` folder instead of the `ports/original` folder. This will cause
 vcpkg to pick up the set of portfiles that have been modified to apply the
-bugfix patch. Then, re-run `build.bat` to rebuild the app. When running the
-executable with the bug fix in place, the XMM registers' state should no longer
-be all zeroes when register state is dumped after a call to OpenSSL code.
-This bug fix was verified both via Intel's SDE as well as by running the app on
-a Tiger Lake CPU on which the bug occurs.
+bugfix patch. Then, remove the `_build` folder and re-run `build.bat` to rebuild
+the app. When running the executable with the bug fix in place, the XMM
+registers' state should no longer be all zeroes when register state is dumped
+after a call to OpenSSL code. This bug fix was verified both via Intel's SDE as
+well as by running the app on a Tiger Lake CPU on which the bug occurs.
 
 It may also be possible to fix the bug without requiring the non-volatile
 registers to be pushed to the stack. When I was going through the assembly code
