@@ -9,6 +9,9 @@ and not restored. This can then cause miscellaneous other errors and unexpected
 behavior if the compiler has generated other code that expects those registers
 to have been restored correctly.
 
+An issue has been opened on the OpenSSL GitHub repository to report this bug:
+https://github.com/openssl/openssl/issues/21522
+
 ## Prerequisites
 * Visual Studio or the Visual Studio build tools
   * This MCVE was tested with Visual Studio 2022. It's likely that any recent
