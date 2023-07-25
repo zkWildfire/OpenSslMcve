@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.23)
 project(MCVE LANGUAGES CXX ASM_NASM)
 find_package(OpenSSL REQUIRED)
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # Create a custom command for generating the assembly files
 set(GENERATED_ASM_FILES
@@ -41,8 +43,10 @@ target_include_directories(GENERATED_ASM
 # Set up the MCVE executable
 add_executable(MCVE
 	src/main.cpp
-	src/Poly1305.hpp
-	src/Poly1305.cpp
+	src/IVs.hpp
+	src/Keys.hpp
+	src/Cipher.hpp
+	src/Cipher.cpp
 	src/XmmRegisters.hpp
 	src/XmmRegisters.cpp
 )

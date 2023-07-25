@@ -1,7 +1,10 @@
 #include <iostream>
 #include <functional>
+#include <openssl/evp.h>
 #include <string>
-#include "Poly1305.hpp"
+#include "Cipher.hpp"
+#include "IVs.hpp"
+#include "Keys.hpp"
 #include "XmmRegisters.hpp"
 
 /// Prints XMM registers before and after the given function is run.
@@ -42,7 +45,12 @@ void PrintResults(
 void TestShortString()
 {
 	// Create the Poly1305 object
-	Poly1305 poly1305;
+	Cipher poly1305(
+		EVP_chacha20_poly1305,
+		EVP_CIPHER_CTX_free,
+		std::span(KEY_256),
+		std::span(IV_128)
+	);
 
 	// Encrypt and decrypt a message
 	const std::string plaintext = "Hello, world!";
@@ -68,7 +76,7 @@ void TestShortString()
 void TestLongString()
 {
 	// Create the Poly1305 object
-	Poly1305 poly1305;
+	Cipher poly1305(EVP_chacha20_poly1305, EVP_CIPHER_CTX_free, KEY_256, IV_128);
 
 	// Generate a string that is long enough to cause AVX-512 instructions to
 	//   be used by the poly1305 implementation

@@ -1,29 +1,38 @@
-#include "Poly1305.hpp"
+#include "Cipher.hpp"
 #include <array>
 #include <cstdint>
 #include <iostream>
 #include <openssl/err.h>
+#include <openssl/evp.h>
 #include <stdexcept>
+#include "IVs.hpp"
+#include "Keys.hpp"
 
-/// 256-bit key used by the encrypt function
-std::array<uint8_t, 32> key =
+std::vector<Cipher> Cipher::MakeAllCiphers()
 {
-	0x30, 0x31, 0x32, 0x33, 0x34, 0x35, 0x36, 0x37,
-	0x38, 0x39, 0x30, 0x31, 0x32, 0x33, 0x34, 0x35,
-	0x36, 0x37, 0x38, 0x39, 0x30, 0x31, 0x32, 0x33,
-	0x34, 0x35, 0x36, 0x37, 0x38, 0x39, 0x30, 0x31
-};
+	return std::vector<Cipher>
+	{
+		MakeChacha20Poly1305()
+	};
+}
 
-/* A 128 bit IV */
-std::array<uint8_t, 16> iv =
+Cipher Cipher::MakeChacha20Poly1305()
 {
-	0x30, 0x31, 0x32, 0x33, 0x34, 0x35, 0x36, 0x37,
-	0x38, 0x39, 0x30, 0x31, 0x32, 0x33, 0x34, 0x35
-};
+	return Cipher(
+		EVP_chacha20_poly1305,
+		EVP_CIPHER_CTX_free,
+		std::span(KEY_256),
+		std::span(IV_128)
+	);
+}
 
-Poly1305::Poly1305()
-	: m_encryptCtx(EVP_CIPHER_CTX_new(), &EVP_CIPHER_CTX_free)
-	, m_decryptCtx(EVP_CIPHER_CTX_new(), &EVP_CIPHER_CTX_free)
+Cipher::Cipher(
+	CipherFunc cipherFunc,
+	CipherFree cipherFree,
+	std::span<const uint8_t> key,
+	std::span<const uint8_t> iv)
+	: m_encryptCtx(EVP_CIPHER_CTX_new(), cipherFree)
+	, m_decryptCtx(EVP_CIPHER_CTX_new(), cipherFree)
 {
 	// Validate context objects
 	if (!m_encryptCtx)
@@ -38,7 +47,7 @@ Poly1305::Poly1305()
 	// Handle remaining initialization
 	if (EVP_EncryptInit_ex(
 		m_encryptCtx.get(),
-		EVP_chacha20_poly1305(),
+		cipherFunc(),
 		nullptr,
 		key.data(),
 		iv.data()) != 1)
@@ -47,7 +56,7 @@ Poly1305::Poly1305()
 	}
 	if (EVP_DecryptInit_ex(
 		m_decryptCtx.get(),
-		EVP_chacha20_poly1305(),
+		cipherFunc(),
 		nullptr,
 		key.data(),
 		iv.data()) != 1)
@@ -56,7 +65,7 @@ Poly1305::Poly1305()
 	}
 }
 
-std::string Poly1305::Decrypt(const std::vector<uint8_t>& ciphertext)
+std::string Cipher::Decrypt(const std::vector<uint8_t>& ciphertext)
 {
 	// Allocate space for the plaintext
 	std::vector<uint8_t> plaintext(
@@ -92,7 +101,7 @@ std::string Poly1305::Decrypt(const std::vector<uint8_t>& ciphertext)
 	return std::string(reinterpret_cast<const char*>(plaintext.data()), plaintext.size());
 }
 
-std::vector<uint8_t> Poly1305::Encrypt(const std::string& plaintext)
+std::vector<uint8_t> Cipher::Encrypt(const std::string& plaintext)
 {
 	// Allocate space for the ciphertext
 	std::vector<uint8_t> ciphertext(
@@ -128,7 +137,7 @@ std::vector<uint8_t> Poly1305::Encrypt(const std::string& plaintext)
 	return ciphertext;
 }
 
-void Poly1305::HandleErrors(const std::string& message)
+void Cipher::HandleErrors(const std::string& message)
 {
 	std::cerr << message << "\n";
 	ERR_print_errors_fp(stderr);
