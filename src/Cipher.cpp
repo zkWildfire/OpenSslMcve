@@ -8,17 +8,28 @@
 #include "IVs.hpp"
 #include "Keys.hpp"
 
+std::vector<std::function<Cipher()>> Cipher::GetCipherFuncs()
+{
+	return std::vector<std::function<Cipher()>>
+	{
+		MakeChacha20Poly1305
+	};
+}
+
 std::vector<Cipher> Cipher::MakeAllCiphers()
 {
-	return std::vector<Cipher>
+	std::vector<Cipher> ciphers;
+	for (const auto& cipherFunc : GetCipherFuncs())
 	{
-		MakeChacha20Poly1305()
-	};
+		ciphers.push_back(cipherFunc());
+	}
+	return ciphers;
 }
 
 Cipher Cipher::MakeChacha20Poly1305()
 {
 	return Cipher(
+		"ChaCha20-Poly1305",
 		EVP_chacha20_poly1305,
 		EVP_CIPHER_CTX_free,
 		std::span(KEY_256),
@@ -27,11 +38,13 @@ Cipher Cipher::MakeChacha20Poly1305()
 }
 
 Cipher::Cipher(
+	const std::string& cipherName,
 	CipherFunc cipherFunc,
 	CipherFree cipherFree,
 	std::span<const uint8_t> key,
 	std::span<const uint8_t> iv)
-	: m_encryptCtx(EVP_CIPHER_CTX_new(), cipherFree)
+	: m_cipherName(cipherName)
+	, m_encryptCtx(EVP_CIPHER_CTX_new(), cipherFree)
 	, m_decryptCtx(EVP_CIPHER_CTX_new(), cipherFree)
 {
 	// Validate context objects
@@ -135,6 +148,11 @@ std::vector<uint8_t> Cipher::Encrypt(const std::string& plaintext)
 	ciphertext.resize(ciphertextLen);
 
 	return ciphertext;
+}
+
+const std::string& Cipher::GetName() const
+{
+	return m_cipherName;
 }
 
 void Cipher::HandleErrors(const std::string& message)

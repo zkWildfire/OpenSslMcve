@@ -96,8 +96,15 @@ XmmRegisters::XmmRegisters()
 	// Save the current state of all registers
 	for (int32_t i = 0; i < XMM_REGISTER_COUNT; ++i)
 	{
-		ReadRegister(i, m_state[i]);
+		ReadRegister(i, m_originalState[i]);
 	}
+
+	// Write the values in the original state to the expected state
+	std::copy(
+		&m_originalState[0][0],
+		&m_originalState[0][0] + XMM_REGISTER_COUNT * FLOATS_PER_XMM_REGISTER,
+		&m_expectedState[0][0]
+	);
 }
 
 XmmRegisters::XmmRegisters(bool)
@@ -107,19 +114,20 @@ XmmRegisters::XmmRegisters(bool)
 	//   register. This is done to (hopefully) avoid executing any
 	//   compiler-generated instructions that use the XMM registers between
 	//   calls to the setter method that was declared in the .asm file.
-	float values[XMM_REGISTER_COUNT][FLOATS_PER_XMM_REGISTER];
 	for (int32_t i = 0; i < XMM_REGISTER_COUNT; ++i)
 	{
 		for (int32_t j = 0; j < FLOATS_PER_XMM_REGISTER; ++j)
 		{
-			values[i][j] = static_cast<float>(i * FLOATS_PER_XMM_REGISTER + j);
+			m_expectedState[i][j] = static_cast<float>(
+				i * FLOATS_PER_XMM_REGISTER + j
+			);
 		}
 	}
 
 	// Set each register to the calculated values
 	for (int32_t i = 0; i < XMM_REGISTER_COUNT; ++i)
 	{
-		WriteRegister(i, values[i]);
+		WriteRegister(i, m_expectedState[i]);
 	}
 }
 
@@ -128,7 +136,7 @@ XmmRegisters::~XmmRegisters()
 	// Restore the state of all registers
 	for (int32_t i = 0; i < XMM_REGISTER_COUNT; ++i)
 	{
-		WriteRegister(i, m_state[i]);
+		WriteRegister(i, m_originalState[i]);
 	}
 }
 
@@ -137,7 +145,35 @@ void XmmRegisters::PrintSavedRegisters() const
 	std::cout << "Saved registers:\n";
 	for (int32_t i = 0; i < XMM_REGISTER_COUNT; ++i)
 	{
-		PrintRegister(i, m_state[i]);
+		PrintRegister(i, m_originalState[i]);
 	}
 	std::cout << "\n";
+}
+
+bool XmmRegisters::Validate() const
+{
+	// Read all registers into a temporary array before performing any checks
+	// This is done to minimize the likelihood of the compiler generating any
+	//   instructions that uses the XMM registers between calls to the getter
+	//   methods.
+	float values[XMM_REGISTER_COUNT][FLOATS_PER_XMM_REGISTER];
+	for (int32_t i = 0; i < XMM_REGISTER_COUNT; ++i)
+	{
+		ReadRegister(i, values[i]);
+	}
+
+	// Compare each register's values to the expected values
+	// Note that XMM0-5 are skipped since only XMM6-15 are callee-saved.
+	for (int32_t i = 6; i < XMM_REGISTER_COUNT; ++i)
+	{
+		if (std::memcmp(
+			values[i],
+			m_expectedState[i],
+			sizeof(float) * FLOATS_PER_XMM_REGISTER) != 0)
+		{
+			return false;
+		}
+	}
+
+	return true;
 }

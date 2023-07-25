@@ -47,6 +47,8 @@ add_executable(MCVE
 	src/Keys.hpp
 	src/Cipher.hpp
 	src/Cipher.cpp
+	src/Validator.hpp
+	src/Validator.cpp
 	src/XmmRegisters.hpp
 	src/XmmRegisters.cpp
 )

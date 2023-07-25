@@ -68,13 +68,28 @@ public:
 	/// Prints the saved values of all registers.
 	void PrintSavedRegisters() const;
 
+	/// Checks if the registers contain the values set by the constructor.
+	/// If the constructor was called with the zero arguments overload, then
+	///   this method will compare the registers' values to the values that this
+	///   object captured when it was constructed. If the constructor was called
+	///   with the boolean overload, then this method will compare the
+	///   registers' values to the values that were set by the constructor.
+	/// @returns True if the registers contain the expected values, false
+	///   otherwise.
+	bool Validate() const;
+
 private:
-	/// Array containing the state of all XMM registers.
+	/// Array containing the original state of all XMM registers.
 	/// This is stored as a plain C style array of floats rather than an
 	///   `std::array` to avoid making any method calls when storing the
 	///   register state. This is important because otherwise, MSVC may use
 	///   the XMM registers as part of the code that stores the register state,
 	///   which partially defeats the purpose of storing the registers in the
 	///   first place.
-	float m_state[XMM_REGISTER_COUNT][FLOATS_PER_XMM_REGISTER];
+	float m_originalState[XMM_REGISTER_COUNT][FLOATS_PER_XMM_REGISTER];
+
+	/// Array containing the expected state of all XMM registers.
+	/// This array's values are what `Validate()` will compare the registers'
+	///   values to.
+	float m_expectedState[XMM_REGISTER_COUNT][FLOATS_PER_XMM_REGISTER];
 };
