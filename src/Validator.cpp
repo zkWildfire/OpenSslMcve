@@ -14,22 +14,43 @@ Validator::Validator(const std::function<Cipher()>& makeCipher)
 {
 }
 
+std::string Validator::GetCipherName() const
+{
+	// To get the name of the cipher, a cipher object must be created
+	auto cipher = m_makeCipher();
+	return cipher.GetName();
+}
+
 bool Validator::Test() const
 {
+	// Create a cipher object so that its name can be queried
+	const auto cipherName = GetCipherName();
+	PrintTestSuiteHeader(cipherName);
+	auto startTime = std::chrono::steady_clock::now();
+
+	// Run the tests
+	bool result = true;
 	for (const auto& test : TEST_FUNCS)
 	{
-		if (!(this->*test)())
-		{
-			return false;
-		}
+		result &= (this->*test)();
 	}
 
-	return true;
+	// Wrap up
+	PrintTestSuiteFooter(
+		cipherName,
+		std::chrono::duration_cast<std::chrono::milliseconds>(
+			std::chrono::steady_clock::now() - startTime
+		)
+	);
+	return result;
 }
 
 bool Validator::TestShortString() const
 {
-	return TestString("Hello, world!");
+	return TestString(
+		"ShortString",
+		"Hello, world!"
+	);
 }
 
 bool Validator::TestLongString() const
@@ -46,22 +67,26 @@ bool Validator::TestNBytes(size_t length) const
 		plaintext += 'a' + (i % 26);
 	}
 
-	return TestString(plaintext);
+	return TestString(
+		std::to_string(length) + "Bytes",
+		plaintext
+	);
 }
 
-bool Validator::TestString(const std::string& plaintext) const
+bool Validator::TestString(
+	const std::string& testName,
+	const std::string& plaintext) const
 {
 	Cipher cipher = m_makeCipher();
-	std::cout << "Running test for cipher " << cipher.GetName()
-		<< " using string of length " << plaintext.size() << ".\n";
+	PrintTestHeader(cipher.GetName(), testName);
+	auto startTime = std::chrono::steady_clock::now();
 	XmmRegisters registers(true);
 
 	// Encrypt the text and make sure all registers are in the expected state
 	auto ciphertext = cipher.Encrypt(plaintext);
 	if (!registers.Validate())
 	{
-		std::cerr << "Cipher " << cipher.GetName() << " did not restore "
-			<< "registers to expected state after encryption.\n";
+		PrintFailText("encryption");
 		return false;
 	}
 
@@ -69,19 +94,77 @@ bool Validator::TestString(const std::string& plaintext) const
 	auto decryptedPlaintext = cipher.Decrypt(ciphertext);
 	if (!registers.Validate())
 	{
-		std::cerr << "Cipher " << cipher.GetName() << " did not restore "
-			<< "registers to expected state after decryption.\n";
+		PrintFailText("decryption");
 		return false;
 	}
 
 	// Sanity check - make sure the decrypted text matches the original text
 	if (plaintext != decryptedPlaintext)
 	{
-		std::cerr << "Cipher " << cipher.GetName() << " did not decrypt "
-			<< "correctly.\n";
+		PrintFailText("sanity");
 		return false;
 	}
 
-	std::cout << "Test passed for cipher " << cipher.GetName() << ".\n";
+	PrintSuccessText(
+		cipher.GetName(),
+		testName,
+		std::chrono::duration_cast<std::chrono::milliseconds>(
+			std::chrono::steady_clock::now() - startTime
+		)
+	);
 	return true;
+}
+
+void Validator::PrintTestSuiteHeader(const std::string& cipher)
+{
+	std::cout << "[----------] "
+		<< TEST_FUNCS.size()
+		<< " tests for "
+		<< cipher << "\n";
+}
+
+void Validator::PrintTestHeader(
+	const std::string& cipher,
+	const std::string& testName)
+{
+	std::cout << "[ RUN      ] "
+		<< cipher
+		<< "."
+		<< testName
+		<< "\n";
+}
+
+void Validator::PrintFailText(const std::string& phase)
+{
+	std::cout << "[  FAILED  ] "
+		<< "Failed in "
+		<< phase
+		<< " phase\n";
+}
+
+void Validator::PrintSuccessText(
+	const std::string& cipher,
+	const std::string& testName,
+	std::chrono::milliseconds duration)
+{
+	std::cout << "[       OK ] "
+		<< cipher
+		<< "."
+		<< testName
+		<< " ("
+		<< duration.count()
+		<< " ms)\n";
+}
+
+void Validator::PrintTestSuiteFooter(
+	const std::string& cipher,
+	std::chrono::milliseconds duration)
+{
+	std::cout << "[----------] "
+		<< TEST_FUNCS.size()
+		<< " tests for "
+		<< cipher
+		<< " ("
+		<< duration.count()
+		<< " ms total)\n";
 }
