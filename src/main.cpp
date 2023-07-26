@@ -27,6 +27,7 @@ int main()
 		}
 	}
 
+	std::cout << "\n";
 	std::cout << "Ciphers tested: " << cipherCount << "\n";
 	std::cout << "Ciphers passed: " << passCount << "\n";
 	std::cout << "Ciphers failed: " << failingCiphers.size() << "\n";
@@ -40,5 +41,5 @@ int main()
 		}
 	}
 
-	return 0;
+	return failingCiphers.size();
 }

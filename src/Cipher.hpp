@@ -13,31 +13,21 @@ public:
 	/// Typedef for functions used to get ciphers.
 	using CipherFunc = const EVP_CIPHER*(*)();
 
-	/// Typedef for functions used to free cipher contexts.
-	using CipherFree = void(*)(EVP_CIPHER_CTX*);
+	/// Function used to free cipher contexts.
+	static constexpr auto CipherFree = &EVP_CIPHER_CTX_free;
 
 	/// Gets all functions used to make cipher objects.
 	/// @returns A vector of all cipher functions.
 	static std::vector<std::function<Cipher()>> GetCipherFuncs();
 
-	/// Constructs all cipher objects with dedicated "make" functions.
-	/// @returns A vector of all cipher objects.
-	static std::vector<Cipher> MakeAllCiphers();
-
-	/// Constructs a new cipher object that uses the chacha20_poly1305 cipher.
-	/// @returns The new cipher object.
-	static Cipher MakeChacha20Poly1305();
-
 	/// Initializes the class with the key and IV.
 	/// @param cipherName The name of the cipher to use.
 	/// @param cipherFunc The function used to get the cipher.
-	/// @param cipherFree The function used to free the cipher context.
 	/// @param key The key to use for encryption and decryption.
 	/// @param iv The initialization vector to use for encryption and decryption.
 	Cipher(
 		const std::string& cipherName,
 		CipherFunc cipherFunc,
-		CipherFree cipherFree,
 		std::span<const uint8_t> key,
 		std::span<const uint8_t> iv
 	);
@@ -70,8 +60,8 @@ private:
 	std::string m_cipherName;
 
 	/// Context object used for encryption.
-	std::unique_ptr<EVP_CIPHER_CTX, CipherFree> m_encryptCtx;
+	std::unique_ptr<EVP_CIPHER_CTX, decltype(CipherFree)> m_encryptCtx;
 
 	/// Context object used for decryption.
-	std::unique_ptr<EVP_CIPHER_CTX, CipherFree> m_decryptCtx;
+	std::unique_ptr<EVP_CIPHER_CTX, decltype(CipherFree)> m_decryptCtx;
 };

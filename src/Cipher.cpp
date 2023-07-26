@@ -8,44 +8,136 @@
 #include "IVs.hpp"
 #include "Keys.hpp"
 
+#define MAKE_CIPHER_FUNC(cipherName, cipherFunc, key, iv) \
+	[]() \
+	{ \
+		return Cipher( \
+			cipherName, \
+			cipherFunc, \
+			std::span(key), \
+			std::span(iv) \
+		); \
+	}
+
 std::vector<std::function<Cipher()>> Cipher::GetCipherFuncs()
 {
 	return std::vector<std::function<Cipher()>>
 	{
-		MakeChacha20Poly1305
+		MAKE_CIPHER_FUNC("EVP_aes_128_ecb", EVP_aes_128_ecb, KEY_256, IV_128),
+		MAKE_CIPHER_FUNC("EVP_aes_128_cbc", EVP_aes_128_cbc, KEY_256, IV_128),
+		MAKE_CIPHER_FUNC("EVP_aes_128_cfb1", EVP_aes_128_cfb1, KEY_256, IV_128),
+		MAKE_CIPHER_FUNC("EVP_aes_128_cfb8", EVP_aes_128_cfb8, KEY_256, IV_128),
+		MAKE_CIPHER_FUNC("EVP_aes_128_cfb128", EVP_aes_128_cfb128, KEY_256, IV_128),
+		MAKE_CIPHER_FUNC("EVP_aes_128_ofb", EVP_aes_128_ofb, KEY_256, IV_128),
+		/*
+		MAKE_CIPHER_FUNC("EVP_aes_128_ctr", EVP_aes_128_ctr, KEY_256, IV_128),
+		MAKE_CIPHER_FUNC("EVP_aes_128_ccm", EVP_aes_128_ccm, KEY_256, IV_128),
+		MAKE_CIPHER_FUNC("EVP_aes_128_gcm", EVP_aes_128_gcm, KEY_256, IV_128),
+		MAKE_CIPHER_FUNC("EVP_aes_128_xts", EVP_aes_128_xts, KEY_256, IV_128),
+		MAKE_CIPHER_FUNC("EVP_aes_128_wrap", EVP_aes_128_wrap, KEY_256, IV_128),
+		MAKE_CIPHER_FUNC("EVP_aes_128_wrap_pad", EVP_aes_128_wrap_pad, KEY_256, IV_128),
+		MAKE_CIPHER_FUNC("EVP_aes_128_ocb", EVP_aes_128_ocb, KEY_256, IV_128),
+		*/
+		MAKE_CIPHER_FUNC("EVP_aes_192_ecb", EVP_aes_192_ecb, KEY_256, IV_128),
+		MAKE_CIPHER_FUNC("EVP_aes_192_cbc", EVP_aes_192_cbc, KEY_256, IV_128),
+		MAKE_CIPHER_FUNC("EVP_aes_192_cfb1", EVP_aes_192_cfb1, KEY_256, IV_128),
+		MAKE_CIPHER_FUNC("EVP_aes_192_cfb8", EVP_aes_192_cfb8, KEY_256, IV_128),
+		MAKE_CIPHER_FUNC("EVP_aes_192_cfb128", EVP_aes_192_cfb128, KEY_256, IV_128),
+		MAKE_CIPHER_FUNC("EVP_aes_192_ofb", EVP_aes_192_ofb, KEY_256, IV_128),
+		/*
+		MAKE_CIPHER_FUNC("EVP_aes_192_ctr", EVP_aes_192_ctr, KEY_256, IV_128),
+		MAKE_CIPHER_FUNC("EVP_aes_192_ccm", EVP_aes_192_ccm, KEY_256, IV_128),
+		MAKE_CIPHER_FUNC("EVP_aes_192_gcm", EVP_aes_192_gcm, KEY_256, IV_128),
+		MAKE_CIPHER_FUNC("EVP_aes_192_wrap", EVP_aes_192_wrap, KEY_256, IV_128),
+		MAKE_CIPHER_FUNC("EVP_aes_192_wrap_pad", EVP_aes_192_wrap_pad, KEY_256, IV_128),
+		MAKE_CIPHER_FUNC("EVP_aes_192_ocb", EVP_aes_192_ocb, KEY_256, IV_128),
+		*/
+		MAKE_CIPHER_FUNC("EVP_aes_256_ecb", EVP_aes_256_ecb, KEY_256, IV_128),
+		MAKE_CIPHER_FUNC("EVP_aes_256_cbc", EVP_aes_256_cbc, KEY_256, IV_128),
+		MAKE_CIPHER_FUNC("EVP_aes_256_cfb1", EVP_aes_256_cfb1, KEY_256, IV_128),
+		MAKE_CIPHER_FUNC("EVP_aes_256_cfb8", EVP_aes_256_cfb8, KEY_256, IV_128),
+		MAKE_CIPHER_FUNC("EVP_aes_256_cfb128", EVP_aes_256_cfb128, KEY_256, IV_128),
+		MAKE_CIPHER_FUNC("EVP_aes_256_ofb", EVP_aes_256_ofb, KEY_256, IV_128),
+		/*
+		MAKE_CIPHER_FUNC("EVP_aes_256_ctr", EVP_aes_256_ctr, KEY_256, IV_128),
+		MAKE_CIPHER_FUNC("EVP_aes_256_ccm", EVP_aes_256_ccm, KEY_256, IV_128),
+		MAKE_CIPHER_FUNC("EVP_aes_256_gcm", EVP_aes_256_gcm, KEY_256, IV_128),
+		MAKE_CIPHER_FUNC("EVP_aes_256_xts", EVP_aes_256_xts, KEY_256, IV_128),
+		MAKE_CIPHER_FUNC("EVP_aes_256_wrap", EVP_aes_256_wrap, KEY_256, IV_128),
+		MAKE_CIPHER_FUNC("EVP_aes_256_wrap_pad", EVP_aes_256_wrap_pad, KEY_256, IV_128),
+		MAKE_CIPHER_FUNC("EVP_aes_256_ocb", EVP_aes_256_ocb, KEY_256, IV_128),
+		MAKE_CIPHER_FUNC("EVP_aes_128_cbc_hmac_sha1", EVP_aes_128_cbc_hmac_sha1, KEY_256, IV_128),
+		MAKE_CIPHER_FUNC("EVP_aes_256_cbc_hmac_sha1", EVP_aes_256_cbc_hmac_sha1, KEY_256, IV_128),
+		MAKE_CIPHER_FUNC("EVP_aes_128_cbc_hmac_sha256", EVP_aes_128_cbc_hmac_sha256, KEY_256, IV_128),
+		MAKE_CIPHER_FUNC("EVP_aes_256_cbc_hmac_sha256", EVP_aes_256_cbc_hmac_sha256, KEY_256, IV_128),
+		*/
+		MAKE_CIPHER_FUNC("EVP_aria_128_ecb", EVP_aria_128_ecb, KEY_256, IV_128),
+		MAKE_CIPHER_FUNC("EVP_aria_128_cbc", EVP_aria_128_cbc, KEY_256, IV_128),
+		MAKE_CIPHER_FUNC("EVP_aria_128_cfb1", EVP_aria_128_cfb1, KEY_256, IV_128),
+		MAKE_CIPHER_FUNC("EVP_aria_128_cfb8", EVP_aria_128_cfb8, KEY_256, IV_128),
+		MAKE_CIPHER_FUNC("EVP_aria_128_cfb128", EVP_aria_128_cfb128, KEY_256, IV_128),
+		/*
+		MAKE_CIPHER_FUNC("EVP_aria_128_ctr", EVP_aria_128_ctr, KEY_256, IV_128),
+		MAKE_CIPHER_FUNC("EVP_aria_128_ofb", EVP_aria_128_ofb, KEY_256, IV_128),
+		MAKE_CIPHER_FUNC("EVP_aria_128_gcm", EVP_aria_128_gcm, KEY_256, IV_128),
+		MAKE_CIPHER_FUNC("EVP_aria_128_ccm", EVP_aria_128_ccm, KEY_256, IV_128),
+		*/
+		MAKE_CIPHER_FUNC("EVP_aria_192_ecb", EVP_aria_192_ecb, KEY_256, IV_128),
+		MAKE_CIPHER_FUNC("EVP_aria_192_cbc", EVP_aria_192_cbc, KEY_256, IV_128),
+		MAKE_CIPHER_FUNC("EVP_aria_192_cfb1", EVP_aria_192_cfb1, KEY_256, IV_128),
+		MAKE_CIPHER_FUNC("EVP_aria_192_cfb8", EVP_aria_192_cfb8, KEY_256, IV_128),
+		MAKE_CIPHER_FUNC("EVP_aria_192_cfb128", EVP_aria_192_cfb128, KEY_256, IV_128),
+		/*
+		MAKE_CIPHER_FUNC("EVP_aria_192_ctr", EVP_aria_192_ctr, KEY_256, IV_128),
+		MAKE_CIPHER_FUNC("EVP_aria_192_ofb", EVP_aria_192_ofb, KEY_256, IV_128),
+		MAKE_CIPHER_FUNC("EVP_aria_192_gcm", EVP_aria_192_gcm, KEY_256, IV_128),
+		MAKE_CIPHER_FUNC("EVP_aria_192_ccm", EVP_aria_192_ccm, KEY_256, IV_128),
+		*/
+		MAKE_CIPHER_FUNC("EVP_aria_256_ecb", EVP_aria_256_ecb, KEY_256, IV_128),
+		MAKE_CIPHER_FUNC("EVP_aria_256_cbc", EVP_aria_256_cbc, KEY_256, IV_128),
+		MAKE_CIPHER_FUNC("EVP_aria_256_cfb1", EVP_aria_256_cfb1, KEY_256, IV_128),
+		MAKE_CIPHER_FUNC("EVP_aria_256_cfb8", EVP_aria_256_cfb8, KEY_256, IV_128),
+		MAKE_CIPHER_FUNC("EVP_aria_256_cfb128", EVP_aria_256_cfb128, KEY_256, IV_128),
+		/*
+		MAKE_CIPHER_FUNC("EVP_aria_256_ctr", EVP_aria_256_ctr, KEY_256, IV_128),
+		MAKE_CIPHER_FUNC("EVP_aria_256_ofb", EVP_aria_256_ofb, KEY_256, IV_128),
+		MAKE_CIPHER_FUNC("EVP_aria_256_gcm", EVP_aria_256_gcm, KEY_256, IV_128),
+		MAKE_CIPHER_FUNC("EVP_aria_256_ccm", EVP_aria_256_ccm, KEY_256, IV_128),
+		*/
+		MAKE_CIPHER_FUNC("EVP_camellia_128_ecb", EVP_camellia_128_ecb, KEY_256, IV_128),
+		MAKE_CIPHER_FUNC("EVP_camellia_128_cbc", EVP_camellia_128_cbc, KEY_256, IV_128),
+		MAKE_CIPHER_FUNC("EVP_camellia_128_cfb1", EVP_camellia_128_cfb1, KEY_256, IV_128),
+		MAKE_CIPHER_FUNC("EVP_camellia_128_cfb8", EVP_camellia_128_cfb8, KEY_256, IV_128),
+		MAKE_CIPHER_FUNC("EVP_camellia_128_cfb128", EVP_camellia_128_cfb128, KEY_256, IV_128),
+		MAKE_CIPHER_FUNC("EVP_camellia_128_ofb", EVP_camellia_128_ofb, KEY_256, IV_128),
+		MAKE_CIPHER_FUNC("EVP_camellia_128_ctr", EVP_camellia_128_ctr, KEY_256, IV_128),
+		MAKE_CIPHER_FUNC("EVP_camellia_192_ecb", EVP_camellia_192_ecb, KEY_256, IV_128),
+		MAKE_CIPHER_FUNC("EVP_camellia_192_cbc", EVP_camellia_192_cbc, KEY_256, IV_128),
+		MAKE_CIPHER_FUNC("EVP_camellia_192_cfb1", EVP_camellia_192_cfb1, KEY_256, IV_128),
+		MAKE_CIPHER_FUNC("EVP_camellia_192_cfb8", EVP_camellia_192_cfb8, KEY_256, IV_128),
+		MAKE_CIPHER_FUNC("EVP_camellia_192_cfb128", EVP_camellia_192_cfb128, KEY_256, IV_128),
+		MAKE_CIPHER_FUNC("EVP_camellia_192_ofb", EVP_camellia_192_ofb, KEY_256, IV_128),
+		MAKE_CIPHER_FUNC("EVP_camellia_192_ctr", EVP_camellia_192_ctr, KEY_256, IV_128),
+		MAKE_CIPHER_FUNC("EVP_camellia_256_ecb", EVP_camellia_256_ecb, KEY_256, IV_128),
+		MAKE_CIPHER_FUNC("EVP_camellia_256_cbc", EVP_camellia_256_cbc, KEY_256, IV_128),
+		MAKE_CIPHER_FUNC("EVP_camellia_256_cfb1", EVP_camellia_256_cfb1, KEY_256, IV_128),
+		MAKE_CIPHER_FUNC("EVP_camellia_256_cfb8", EVP_camellia_256_cfb8, KEY_256, IV_128),
+		MAKE_CIPHER_FUNC("EVP_camellia_256_cfb128", EVP_camellia_256_cfb128, KEY_256, IV_128),
+		MAKE_CIPHER_FUNC("EVP_camellia_256_ofb", EVP_camellia_256_ofb, KEY_256, IV_128),
+		MAKE_CIPHER_FUNC("EVP_camellia_256_ctr", EVP_camellia_256_ctr, KEY_256, IV_128),
+		MAKE_CIPHER_FUNC("EVP_chacha20", EVP_chacha20, KEY_256, IV_128),
+		MAKE_CIPHER_FUNC("EVP_chacha20_poly1305", EVP_chacha20_poly1305, KEY_256, IV_128)
 	};
-}
-
-std::vector<Cipher> Cipher::MakeAllCiphers()
-{
-	std::vector<Cipher> ciphers;
-	for (const auto& cipherFunc : GetCipherFuncs())
-	{
-		ciphers.push_back(cipherFunc());
-	}
-	return ciphers;
-}
-
-Cipher Cipher::MakeChacha20Poly1305()
-{
-	return Cipher(
-		"ChaCha20-Poly1305",
-		EVP_chacha20_poly1305,
-		EVP_CIPHER_CTX_free,
-		std::span(KEY_256),
-		std::span(IV_128)
-	);
 }
 
 Cipher::Cipher(
 	const std::string& cipherName,
 	CipherFunc cipherFunc,
-	CipherFree cipherFree,
 	std::span<const uint8_t> key,
 	std::span<const uint8_t> iv)
 	: m_cipherName(cipherName)
-	, m_encryptCtx(EVP_CIPHER_CTX_new(), cipherFree)
-	, m_decryptCtx(EVP_CIPHER_CTX_new(), cipherFree)
+	, m_encryptCtx(EVP_CIPHER_CTX_new(), CipherFree)
+	, m_decryptCtx(EVP_CIPHER_CTX_new(), CipherFree)
 {
 	// Validate context objects
 	if (!m_encryptCtx)
