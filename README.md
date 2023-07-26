@@ -12,6 +12,12 @@ to have been restored correctly.
 An issue has been opened on the OpenSSL GitHub repository to report this bug:
 https://github.com/openssl/openssl/issues/21522
 
+Note that the majority of this README discusses the initial MCVE implementation,
+which is different than the current implementation. Check out the `mcve` tag
+to get the original MCVE implementation. The current implementation validates
+additional ciphers but does not print the register state before and after
+calling OpenSSL methods.
+
 ## Prerequisites
 * Visual Studio or the Visual Studio build tools
   * This MCVE was tested with Visual Studio 2022. It's likely that any recent
