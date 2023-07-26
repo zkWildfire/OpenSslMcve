@@ -18,6 +18,29 @@ to get the original MCVE implementation. The current implementation validates
 additional ciphers but does not print the register state before and after
 calling OpenSSL methods.
 
+Sample output of the current implementation:
+```
+[----------] 2 tests for EVP_chacha20
+[ RUN      ] EVP_chacha20.ShortString
+[       OK ] EVP_chacha20.ShortString (54 ms)
+[ RUN      ] EVP_chacha20.1024Bytes
+[       OK ] EVP_chacha20.1024Bytes (31 ms)
+[----------] 2 tests for EVP_chacha20 (110 ms total)
+[----------] 2 tests for EVP_chacha20_poly1305
+[ RUN      ] EVP_chacha20_poly1305.ShortString
+[       OK ] EVP_chacha20_poly1305.ShortString (19 ms)
+[ RUN      ] EVP_chacha20_poly1305.1024Bytes
+[  FAILED  ] Failed in encryption phase
+[----------] 2 tests for EVP_chacha20_poly1305 (53 ms total)
+
+Ciphers tested: 56
+Ciphers passed: 55
+Ciphers failed: 1
+
+Failed ciphers:
+EVP_chacha20_poly1305
+```
+
 ## Prerequisites
 * Visual Studio or the Visual Studio build tools
   * This MCVE was tested with Visual Studio 2022. It's likely that any recent
