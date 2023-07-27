@@ -19,6 +19,14 @@
 				"CMAKE_EXPORT_COMPILE_COMMANDS": {
 					"type": "bool",
 					"value": true
+				},
+				"VCPKG_HOST_TRIPLET": {
+					"type": "string",
+					"value": "x64-windows-static"
+				},
+				"VCPKG_TARGET_TRIPLET": {
+					"type": "string",
+					"value": "x64-windows-static"
 				}
 			}
 		},
@@ -50,7 +58,7 @@
 			"cacheVariables": {
 				"CMAKE_BUILD_TYPE": {
 					"type": "string",
-					"value": "Release"
+					"value": "RelWithDebInfo"
 				}
 			}
 		}

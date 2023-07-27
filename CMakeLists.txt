@@ -103,9 +103,16 @@ install(
 	DESTINATION
 		"${CMAKE_INSTALL_PREFIX}"
 )
-install(
-	FILES
-		"${CMAKE_CURRENT_BINARY_DIR}/libcrypto-3-x64.dll"
-	DESTINATION
-		"${CMAKE_INSTALL_PREFIX}"
-)
+
+# Copy the OpenSSL DLLs to the install directory
+# This is only needed when using the `x64-windows` triplet. If testing using the
+#   `x64-windows-static` triplet, OpenSSL is statically linked and no DLLs are
+#   needed.
+if (VCPKG_HOST_TRIPLET STREQUAL "x64-windows")
+	install(
+		FILES
+			"${CMAKE_CURRENT_BINARY_DIR}/libcrypto-3-x64.dll"
+		DESTINATION
+			"${CMAKE_INSTALL_PREFIX}"
+	)
+endif()
