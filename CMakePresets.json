@@ -10,7 +10,7 @@
 			"name": "base",
 			"hidden": true,
 			"generator": "Ninja",
-			"toolchainFile": "${sourceDir}/_vcpkg/scripts/buildsystems/vcpkg.cmake",
+			"toolchainFile": "${sourceDir}/vcpkg/scripts/buildsystems/vcpkg.cmake",
 			"cacheVariables": {
 				"CMAKE_ASM_NASM_COMPILER": {
 					"type": "string",

@@ -494,7 +494,6 @@ FodyWeavers.xsd
 _cmake/
 _nasm/
 _ninja/
-_vcpkg/
 
 # Ignore build directories
 _build/

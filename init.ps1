@@ -22,13 +22,12 @@ if (-not (Get-Command python -ErrorAction SilentlyContinue)) {
 $scriptDirectory = Split-Path -Parent -Path $MyInvocation.MyCommand.Definition
 
 # Define the VCPKG directory
-$vcpkgDirectory = Join-Path -Path $scriptDirectory -ChildPath "_vcpkg"
+$vcpkgDirectory = Join-Path -Path $scriptDirectory -ChildPath "vcpkg"
 
-# Clone vcpkg repository
+# Make sure the vcpkg repository is present
 if (-not (Test-Path $vcpkgDirectory))
 {
-	Write-Host "Cloning vcpkg into '$vcpkgDirectory'..."
-	git clone https://github.com/microsoft/vcpkg.git $vcpkgDirectory
+	git submodule update --init
 
 	# Run bootstrap-vcpkg.bat
 	$bootstrapScript = Join-Path -Path $vcpkgDirectory -ChildPath "bootstrap-vcpkg.bat"
