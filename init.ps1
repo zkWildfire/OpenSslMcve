@@ -22,6 +22,7 @@ if (-not (Get-Command python -ErrorAction SilentlyContinue)) {
 $scriptDirectory = Split-Path -Parent -Path $MyInvocation.MyCommand.Definition
 
 # Make sure the vcpkg repository is present
+$vcpkgDirectory = Join-Path -Path $scriptDirectory -ChildPath "vcpkg"
 git submodule update --init
 
 # Run bootstrap-vcpkg.bat
