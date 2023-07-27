@@ -14,8 +14,8 @@
 		return Cipher( \
 			cipherName, \
 			cipherFunc, \
-			std::span(key), \
-			std::span(iv) \
+			key.data(), \
+			iv.data() \
 		); \
 	}
 
@@ -133,8 +133,8 @@ std::vector<std::function<Cipher()>> Cipher::GetCipherFuncs()
 Cipher::Cipher(
 	const std::string& cipherName,
 	CipherFunc cipherFunc,
-	std::span<const uint8_t> key,
-	std::span<const uint8_t> iv)
+	const uint8_t* key,
+	const uint8_t* iv)
 	: m_cipherName(cipherName)
 	, m_encryptCtx(EVP_CIPHER_CTX_new(), CipherFree)
 	, m_decryptCtx(EVP_CIPHER_CTX_new(), CipherFree)
@@ -154,8 +154,8 @@ Cipher::Cipher(
 		m_encryptCtx.get(),
 		cipherFunc(),
 		nullptr,
-		key.data(),
-		iv.data()) != 1)
+		key,
+		iv) != 1)
 	{
 		HandleErrors("Failed to initialize encryption");
 	}
@@ -163,8 +163,8 @@ Cipher::Cipher(
 		m_decryptCtx.get(),
 		cipherFunc(),
 		nullptr,
-		key.data(),
-		iv.data()) != 1)
+		key,
+		iv) != 1)
 	{
 		HandleErrors("Failed to initialize decryption");
 	}

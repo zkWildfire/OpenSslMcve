@@ -46,8 +46,8 @@ void TestShortString()
 	Cipher poly1305(
 		"chacha20-poly1305",
 		EVP_chacha20_poly1305,
-		std::span(KEY_256),
-		std::span(IV_128)
+		KEY_256.data(),
+		IV_128.data()
 	);
 
 	// Encrypt and decrypt a message
@@ -76,8 +76,8 @@ void TestLongString()
 	Cipher poly1305(
 		"chacha20-poly1305",
 		EVP_chacha20_poly1305,
-		std::span(KEY_256),
-		std::span(IV_128)
+		KEY_256.data(),
+		IV_128.data()
 	);
 
 	// Generate a string that is long enough to cause AVX-512 instructions to

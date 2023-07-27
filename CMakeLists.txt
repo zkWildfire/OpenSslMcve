@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.23)
 project(MCVE LANGUAGES CXX ASM_NASM)
 find_package(OpenSSL REQUIRED)
-set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # Create a custom command for generating the assembly files

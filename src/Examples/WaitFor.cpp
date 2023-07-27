@@ -25,8 +25,8 @@ int main()
 		return Cipher(
 			"chacha20-poly1305",
 			EVP_chacha20_poly1305,
-			std::span(KEY_256),
-			std::span(IV_128)
+			KEY_256.data(),
+			IV_128.data()
 		);
 	};
 	auto validator = Validator(makeCipher);
@@ -37,7 +37,7 @@ int main()
 	// Note that it's fine for this to occur after the validator runs its
 	//   tests because the validator will restore the registers to the correct
 	//   state before returning
-	std::cout << "Waiting for 100ms before call to OpenSSL...\n";
+	std::cout << "\nWaiting for 100ms before call to OpenSSL...\n";
 	Wait();
 	std::cout << "Finished pre-OpenSSL wait.\n\n";
 

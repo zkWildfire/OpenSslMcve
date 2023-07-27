@@ -2,7 +2,6 @@
 #include <functional>
 #include <memory>
 #include <openssl/evp.h>
-#include <span>
 #include <string>
 #include <vector>
 
@@ -28,8 +27,8 @@ public:
 	Cipher(
 		const std::string& cipherName,
 		CipherFunc cipherFunc,
-		std::span<const uint8_t> key,
-		std::span<const uint8_t> iv
+		const uint8_t* key,
+		const uint8_t* iv
 	);
 	Cipher(const Cipher&) = delete;
 	Cipher(Cipher&&) = default;
