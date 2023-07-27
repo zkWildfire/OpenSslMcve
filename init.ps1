@@ -21,27 +21,17 @@ if (-not (Get-Command python -ErrorAction SilentlyContinue)) {
 # Get the script's directory
 $scriptDirectory = Split-Path -Parent -Path $MyInvocation.MyCommand.Definition
 
-# Define the VCPKG directory
-$vcpkgDirectory = Join-Path -Path $scriptDirectory -ChildPath "vcpkg"
-
 # Make sure the vcpkg repository is present
-if (-not (Test-Path $vcpkgDirectory))
-{
-	git submodule update --init
+git submodule update --init
 
-	# Run bootstrap-vcpkg.bat
-	$bootstrapScript = Join-Path -Path $vcpkgDirectory -ChildPath "bootstrap-vcpkg.bat"
-	if (Test-Path $bootstrapScript) {
-		Write-Host "Initializing vcpkg..."
-		Invoke-Expression $bootstrapScript
-	} else {
-		Write-Error "Error: Failed to find 'bootstrap-vcpkg.bat' script in the cloned VCPKG directory."
-		exit 1
-	}
-}
-else
-{
-	Write-Host "Skipping vcpkg initialization since the folder already exists."
+# Run bootstrap-vcpkg.bat
+$bootstrapScript = Join-Path -Path $vcpkgDirectory -ChildPath "bootstrap-vcpkg.bat"
+if (Test-Path $bootstrapScript) {
+	Write-Host "Initializing vcpkg..."
+	Invoke-Expression $bootstrapScript
+} else {
+	Write-Error "Error: Failed to find 'bootstrap-vcpkg.bat' script in the cloned VCPKG directory."
+	exit 1
 }
 
 # Handle CMake setup
