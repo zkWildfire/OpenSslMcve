@@ -40,27 +40,66 @@ target_include_directories(GENERATED_ASM
 		"${CMAKE_CURRENT_BINARY_DIR}/asm"
 )
 
-# Set up the MCVE executable
-add_executable(MCVE
-	src/main.cpp
-	src/IVs.hpp
-	src/Keys.hpp
-	src/Cipher.hpp
-	src/Cipher.cpp
-	src/Validator.hpp
-	src/Validator.cpp
-	src/XmmRegisters.hpp
-	src/XmmRegisters.cpp
+# Create a library that each executable links to
+add_library(Common STATIC
+	src/Common/IVs.hpp
+	src/Common/Keys.hpp
+	src/Common/Cipher.hpp
+	src/Common/Cipher.cpp
+	src/Common/Validator.hpp
+	src/Common/Validator.cpp
+	src/Common/XmmRegisters.hpp
+	src/Common/XmmRegisters.cpp
 )
-target_link_libraries(MCVE
-	PRIVATE
+target_include_directories(Common
+	INTERFACE
+		src/Common
+)
+target_link_libraries(Common
+	PUBLIC
 		GENERATED_ASM
 		OpenSSL::SSL
 		OpenSSL::Crypto
 )
+
+# Set up the MCVE executable
+# This is the executable that demonstrates the bug by printing XMM registers'
+#   state before and after the call to OpenSSL code
+add_executable(Mcve
+	src/Mcve/Mcve.cpp
+)
+target_link_libraries(Mcve
+	PRIVATE
+		Common
+)
+
+# Set up the test executable
+# This executable uses the XMM register validation code to test multiple
+#   different OpenSSL algorithms to see if any other algorithms have the same
+#   bug
+add_executable(Tests
+	src/Tests/Tests.cpp
+)
+target_link_libraries(Tests
+	PRIVATE
+		Common
+)
+
+# Set up the example executable for demonstrating what sort of unexpected
+#   behavior may occur as a result of the OpenSSL bug
+add_executable(ExampleWaitFor
+	src/Examples/WaitFor.cpp
+)
+target_link_libraries(ExampleWaitFor
+	PRIVATE
+		Common
+)
+
 install(
 	TARGETS
-		MCVE
+		Mcve
+		Tests
+		ExampleWaitFor
 	DESTINATION
 		"${CMAKE_INSTALL_PREFIX}"
 )
